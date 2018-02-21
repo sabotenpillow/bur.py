@@ -7,30 +7,26 @@ class MyNfq:
     def __init__(self, queue_id):
         self.nfqueue = NetfilterQueue()
         self.nfqueue.bind(queue_id, self.__cb)
-        self.pktnum = 0
-        self.pktlist = []
-        self.only_req = False
-        self.only_res = False
+        self.__pktlist = []
+        self.__only_req = False
+        self.__only_res = False
 
     def __cb(self, pkt):
         packet = IP(pkt.get_payload())
         if packet.proto is 0x06 and packet.haslayer(Raw):
-            #print(packet[TCP].payload.load.decode())
-            #print(packet[TCP].payload.load.__class__)
             is_http = MyNfq.__is_HTTP(packet[TCP].payload.load)
             if ( is_http == 'request' ):
-                if ( self.only_res ):
+                if ( self.__only_res ):
                     pkt.accept(); return
             elif ( is_http == 'response' ):
-                if ( self.only_req ):
+                if ( self.__only_req ):
                     pkt.accept(); return
             else: pkt.accept(); return
             tcp = packet[TCP]
             line = [is_http, ':', packet.src, '->', packet.dst,
                     ',', tcp.sport, '->', tcp.dport]
             line = ' '.join(map(str, line))
-            self.pktnum += 1
-            self.pktlist.append(
+            self.__pktlist.append(
                 {'pkt':pkt, 'oneline':line, })
             print(line)
         else: pkt.accept()
