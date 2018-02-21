@@ -21,6 +21,7 @@ def nfprocess(pkt):
 
     pkt.accept()
 
+#if __name__ is '__main__':
 def main():
     subprocess.call('iptables -t raw -A PREROUTING -j NFQUEUE --queue-num 6 -i eth1'.split(' '))
     subprocess.call('iptables -t raw -A OUTPUT -j NFQUEUE --queue-num 6 -s 192.168.67.10'.split(' '))
