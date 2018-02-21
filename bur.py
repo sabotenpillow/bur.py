@@ -9,16 +9,16 @@ import time
 class NfqRunner(threading.Thread):
     def __init__(self, nfq):
         super(NfqRunner, self).__init__()
-        self.nfq       = nfq
-        self.loop_flag = True
+        self.__nfq       = nfq
+        self.__loop_flag = True
     def run(self):
-        while self.loop_flag:
+        while self.__loop_flag:
             try:
-                self.nfq.run()
+                self.__nfq.run()
             except:
                 pass
     def stop(self):
-        self.loop_flag = False
+        self.__loop_flag = False
 
 #if __name__ is '__main__':
 def main():
