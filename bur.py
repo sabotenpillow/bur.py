@@ -2,13 +2,23 @@ import os
 import sys
 import subprocess
 from netfilterqueue import NetfilterQueue
+import logging
+logging.getLogger('scapy.runtime').setLevel(logging.ERROR)
 from scapy.all import *
-#from IPython import embed
+from IPython import embed
 
 def nfprocess(pkt):
     packet = IP(pkt.get_payload())
 
-    print(packet)
+    if packet.proto is 0x06:
+        if packet[TCP].payload.__class__ is scapy.packet.Raw:
+            tcp = packet[TCP]
+            line = [packet.src, '->', packet.dst, ',',
+                    tcp.sport, '->', tcp.dport]
+            line = ' '.join(map(str, line))
+            print(line)
+            #print(packet[TCP].payload.load.decode())
+
     pkt.accept()
 
 def main():
