@@ -3,6 +3,7 @@ import sys
 import subprocess
 import threading
 from mynfq import MyNfq
+from mycurses import MyCurses as MyCrs
 # from IPython import embed
 import time
 
@@ -34,12 +35,14 @@ def main():
     nfq    = MyNfq(QUEUE_ID)
     nfq.set_socket_timeout(1)
     nfqthr = NfqRunner(nfq)
+    crs    = MyCrs()
     nfqthr.start()
 
     for i in range(1, 10):
         time.sleep(1)
-        print(i, ': ', nfq.get_pktnum())
+        crs.printlist(nfq)
 
+    MyCrs.exit()
     nfqthr.stop()
     print('wait for sub thread finish')
     nfqthr.join()

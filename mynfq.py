@@ -57,3 +57,11 @@ class MyNfq:
 
     def get_pktnum(self):
         return len(self.__pktlist)
+
+    def get_pktline(self, i):
+        try:
+            return self.__pktlist[i]
+        except: return
+
+    def get_pktrange(self, first, last):
+        return self.__pktlist[first:last]
