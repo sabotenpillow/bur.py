@@ -10,6 +10,16 @@ class MyCurses:
     #__stdscr.keypad(True)
     __stdscr.clear()
 
+    curses.start_color()
+    curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLACK)
+    curses.init_pair(2, curses.COLOR_BLACK, curses.COLOR_RED)
+    curses.init_pair(3, curses.COLOR_BLACK, curses.COLOR_GREEN)
+    curses.init_pair(4, curses.COLOR_BLACK, curses.COLOR_YELLOW)
+    curses.init_pair(5, curses.COLOR_BLACK, curses.COLOR_BLUE)
+    curses.init_pair(6, curses.COLOR_BLACK, curses.COLOR_MAGENTA)
+    curses.init_pair(7, curses.COLOR_BLACK, curses.COLOR_CYAN)
+    curses.init_pair(8, curses.COLOR_BLACK, curses.COLOR_WHITE)
+
     def __init__(self):
         self.__cur_y, self.__cur_x = 0, 0
 
@@ -22,11 +32,16 @@ class MyCurses:
 
     def printlist(self, nfq):
         MyCurses.updatelist(nfq)
+        self.print_curposline(nfq)
         self.move_curpos()
-        #self.print_curposline(nfq)
         MyCurses.__stdscr.refresh()
 
-    #def print_curposline(self, nfq):
+    def print_curposline(self, nfq):
+        pktelem = nfq.get_a_pkt(MyCurses.__listtop + self.__cur_y)
+        if pktelem is not None:
+            self.__stdscr.addstr(self.__cur_y, 0, pktelem['oneline'],
+                                 curses.color_pair(4))
+
     @classmethod
     def updatelist(self, nfq):
         y = 0
@@ -47,6 +62,7 @@ class MyCurses:
             self.__cur_y = min(nfq.get_pktnum(), MyCurses.__max_y) - 1
         elif k == 'Q' :
             return -1
+        self.printlist(nfq)
     # def keyinput(self, nfq):
     #     k = MyCurses.__stdscr.getch()
     #     if   k == ord('j') or k == curses.KEY_DOWN : self.__cursor_down(nfq)

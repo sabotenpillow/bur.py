@@ -61,7 +61,7 @@ class MyNfq:
     def get_a_pkt(self, i):
         try:
             return self.__pktlist[i]
-        except: return
+        except: pass
 
     def get_ranged_pkts(self, first, last):
         return self.__pktlist[first:last]
