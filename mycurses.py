@@ -30,7 +30,7 @@ class MyCurses:
     @classmethod
     def updatelist(self, nfq):
         y = 0
-        for e in nfq.get_pktrange(self.__listtop,
+        for e in nfq.get_ranged_pkts(self.__listtop,
                                   self.__listtop + self.__max_y):
             self.__stdscr.addstr(y, 0, e['oneline'])
             y += 1
