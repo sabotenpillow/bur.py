@@ -21,6 +21,19 @@ class NfqRunner(threading.Thread):
     def stop(self):
         self.__loop_flag = False
 
+class CursesRunner(threading.Thread):
+    def __init__(self, crs, nfq):
+        super(CursesRunner, self).__init__()
+        self.__crs       = crs
+        self.__nfq       = nfq
+        self.__loop_flag = True
+    def run(self):
+        while self.__loop_flag:
+            self.__crs.printlist(self.__nfq)
+            time.sleep(0.05)
+    def stop(self):
+        self.__loop_flag = False
+
 #if __name__ is '__main__':
 def main():
     QUEUE_ID = 6
@@ -36,16 +49,19 @@ def main():
     nfq.set_socket_timeout(1)
     nfqthr = NfqRunner(nfq)
     crs    = MyCrs()
+    crsthr = CursesRunner(crs, nfq)
     nfqthr.start()
+    crsthr.start()
 
-    for i in range(1, 10):
-        time.sleep(1)
-        crs.printlist(nfq)
+    while True:
+        if  crs.keyinput(nfq) is -1 : break
 
-    MyCrs.exit()
     nfqthr.stop()
+    crsthr.stop()
+    MyCrs.exit()
     print('wait for sub thread finish')
     nfqthr.join()
+    crsthr.join()
     nfq.unbind()
     subprocess.call('iptables -t raw -F'.split(' '))
 
