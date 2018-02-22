@@ -65,3 +65,12 @@ class MyNfq:
 
     def get_ranged_pkts(self, first, last):
         return self.__pktlist[first:last]
+
+    def accept(self, i):
+        self.__pktlist[i]['pkt'].accept()
+        self.__del_elem(i)
+    def drop(self, i):
+        self.__pktlist[i]['pkt'].drop()
+        self.__del_elem(i)
+    def __del_elem(self, i):
+        del(self.__pktlist[i])

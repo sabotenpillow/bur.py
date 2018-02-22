@@ -31,6 +31,7 @@ class MyCurses:
         curses.endwin()
 
     def printlist(self, nfq):
+        self.__stdscr.erase()
         MyCurses.updatelist(nfq)
         self.print_curposline(nfq)
         self.move_curpos()
@@ -60,6 +61,8 @@ class MyCurses:
         elif k == 'g' : self.__cur_y = 0
         elif k == 'G' :
             self.__cur_y = min(nfq.get_pktnum(), MyCurses.__max_y) - 1
+        elif k == 'a' : nfq.accept(MyCurses.__listtop + self.__cur_y)
+        elif k == 'd' : nfq.drop(MyCurses.__listtop + self.__cur_y)
         elif k == 'Q' :
             return -1
         self.printlist(nfq)
