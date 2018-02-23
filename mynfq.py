@@ -19,11 +19,11 @@ class MyNfq:
         packet = IP(pkt.get_payload())
         if packet.proto is 0x06 and packet.haslayer(Raw):
             is_http = MyNfq.__is_HTTP(packet[TCP].payload.load)
-            if ( is_http == 'request' ):
+            if is_http == 'request':
                 if ( self.__only_res ):
                     pkt.accept(); return
-            elif ( is_http == 'response' ):
-                if ( self.__only_req ):
+            elif is_http == 'response':
+                if self.__only_req:
                     pkt.accept(); return
             else: pkt.accept(); return
             tcp = packet[TCP]
@@ -32,7 +32,6 @@ class MyNfq:
             line = ' '.join(map(str, line))
             self.__pktlist.append(
                 {'pkt':pkt, 'oneline':line, })
-            # print(line)
         else: pkt.accept()
 
     def get_fd(self):
@@ -49,9 +48,9 @@ class MyNfq:
 
     @staticmethod
     def __is_HTTP(raw):
-        if ( re.match('^.+ /.* HTTP/.\..\r\n', raw.decode()) ):
+        if re.match('^.+ /.* HTTP/.\..\r\n', raw.decode()):
             return 'request'
-        elif ( re.match('^HTTP/.\.. .+ .+\r\n', raw.decode()) ):
+        elif re.match('^HTTP/.\.. .+ .+\r\n', raw.decode()):
             return 'response'
         else: return False
 

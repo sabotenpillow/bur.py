@@ -57,28 +57,28 @@ class MyCurses:
 
     def keyinput(self, nfq):
         k = MyCurses.__stdscr.getkey()
-        if   k == 'j' : self.__cursor_down(nfq)
-        elif k == 'k' : self.__cursor_up()
-        elif k == 'g' : self.__cur_y = 0
-        elif k == 'G' :
+        if   k == 'j': self.__cursor_down(nfq)
+        elif k == 'k': self.__cursor_up()
+        elif k == 'g': self.__cur_y = 0
+        elif k == 'G':
             self.__cur_y = min(nfq.get_pktnum(), MyCurses.__max_y) - 1
-        elif k == 'a' :
+        elif k == 'a':
             nfq.accept(MyCurses.__listtop + self.__cur_y)
             self.__correct_curline(nfq)
-        elif k == 'd' :
+        elif k == 'd':
             nfq.drop(MyCurses.__listtop + self.__cur_y)
             self.__correct_curline(nfq)
-        elif k == 'Q' :
+        elif k == 'Q':
             return -1
         self.printlist(nfq)
     # def keyinput(self, nfq):
     #     k = MyCurses.__stdscr.getch()
-    #     if   k == ord('j') or k == curses.KEY_DOWN : self.__cursor_down(nfq)
-    #     elif k == ord('k') or k == curses.KEY_UP : self.__cursor_up()
-    #     elif k == ord('g') : self.__cur_y = 0
-    #     elif k == ord('G') :
+    #     if   k == ord('j') or k == curses.KEY_DOWN: self.__cursor_down(nfq)
+    #     elif k == ord('k') or k == curses.KEY_UP: self.__cursor_up()
+    #     elif k == ord('g'): self.__cur_y = 0
+    #     elif k == ord('G'):
     #         self.__cur_y = min(nfq.get_pktnum(), MyCurses.max_y) - 1
-    #     elif k == ord('Q') :
+    #     elif k == ord('Q'):
     #         return -1
 
     def __correct_curline(self, nfq):
