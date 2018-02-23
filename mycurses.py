@@ -61,7 +61,8 @@ class MyCurses:
         elif k == 'k': self.__cursor_up()
         elif k == 'g': self.__cur_y = 0
         elif k == 'G':
-            self.__cur_y = min(nfq.get_pktnum(), MyCurses.__max_y) - 1
+            dest_y = min(nfq.get_pktnum(), MyCurses.__max_y) - 1
+            if dest_y >= 0: self.__cur_y = dest_y
         elif k == 'a':
             nfq.accept(MyCurses.__listtop + self.__cur_y)
             self.__correct_curline(nfq)
@@ -83,7 +84,7 @@ class MyCurses:
 
     def __correct_curline(self, nfq):
         pktnum = nfq.get_pktnum()
-        if MyCurses.__listtop + self.__cur_y >= nfq.get_pktnum():
+        if pktnum != 0 and MyCurses.__listtop + self.__cur_y >= pktnum:
             self.__cur_y -= 1
 
     def __cursor_down(self, nfq):

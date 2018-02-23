@@ -66,10 +66,12 @@ class MyNfq:
         return self.__pktlist[first:last]
 
     def accept(self, i):
-        self.__pktlist[i]['pkt'].accept()
-        self.__del_elem(i)
+        if self.get_pktnum() > 0:
+            self.__pktlist[i]['pkt'].accept()
+            self.__del_elem(i)
     def drop(self, i):
-        self.__pktlist[i]['pkt'].drop()
-        self.__del_elem(i)
+        if self.get_pktnum() > 0:
+            self.__pktlist[i]['pkt'].drop()
+            self.__del_elem(i)
     def __del_elem(self, i):
         del(self.__pktlist[i])
