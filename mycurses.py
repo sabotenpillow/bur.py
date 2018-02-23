@@ -6,6 +6,7 @@ class MyCurses:
     __max_y, __max_x = __stdscr.getmaxyx()
     curses.noecho()
     curses.cbreak()
+    curses.curs_set(0)
     #__stdscr.nodelay(True)
     #__stdscr.keypad(True)
     __stdscr.clear()
@@ -86,18 +87,18 @@ class MyCurses:
             self.__cur_y -= 1
 
     def __cursor_down(self, nfq):
-        cmp_res = MyCurses.cmp(self.__cur_y, MyCurses.__max_y-1)
+        cmp_res = MyCurses.__cmp(self.__cur_y, MyCurses.__max_y-1)
         pktnum = nfq.get_pktnum()
-        if   cmp_res is -1 and self.__cur_y < pktnum-1:
-            self.__cur_y += 1
-        elif cmp_res is 0:
+        if   cmp_res is 0:
             MyCurses.__inc_listtop(pktnum)
+        elif cmp_res is -1 and self.__cur_y < pktnum-1:
+            self.__cur_y += 1
     def __cursor_up(self):
-        cmp_res = MyCurses.cmp(self.__cur_y, 0)
-        if   cmp_res is 1:
-            self.__cur_y -= 1
+        cmp_res = MyCurses.__cmp(self.__cur_y, 0)
         if   cmp_res is 0:
             MyCurses.__dec_listtop()
+        elif cmp_res is 1:
+            self.__cur_y -= 1
     @classmethod
     def __inc_listtop(self, pktnum):
         if pktnum > self.__listtop + self.__max_y:
@@ -107,6 +108,6 @@ class MyCurses:
         if self.__listtop > 0:
             self.__listtop -= 1
     @staticmethod
-    def cmp(a,  b):
+    def __cmp(a,  b):
         if a is b: return 0
         return -1 if a < b else 1
