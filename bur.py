@@ -34,7 +34,6 @@ class CursesRunner(threading.Thread):
     def stop(self):
         self.__loop_flag = False
 
-#if __name__ is '__main__':
 def main():
     QUEUE_ID = 6
     IF       = 'eth1'
@@ -54,7 +53,7 @@ def main():
     crsthr.start()
 
     while True:
-        if  crs.keyinput(nfq) is -1 : break
+        if crs.keyinput(nfq) is -1 : break
 
     nfqthr.stop()
     crsthr.stop()
@@ -65,4 +64,5 @@ def main():
     nfq.unbind()
     subprocess.call('iptables -t raw -F'.split(' '))
 
-main()
+if __name__ == '__main__':
+    main()
