@@ -1,4 +1,5 @@
 import curses
+from curses_pad import curses_pad
 
 class MyCurses:
     __listtop        = 0
@@ -7,7 +8,7 @@ class MyCurses:
     curses.noecho()
     curses.cbreak()
     curses.curs_set(0)
-    #__stdscr.nodelay(True)
+    __stdscr.nodelay(True)
     #__stdscr.keypad(True)
     __stdscr.clear()
 
@@ -56,31 +57,38 @@ class MyCurses:
         MyCurses.__stdscr.move(self.__cur_y, self.__cur_x)
 
     def keyinput(self, nfq):
-        k = MyCurses.__stdscr.getkey()
-        if   k == 'j': self.__cursor_down(nfq)
-        elif k == 'k': self.__cursor_up()
-        elif k == 'g': self.__cur_y = 0
-        elif k == 'G':
+        #k = MyCurses.__stdscr.getkey()
+        k = MyCurses.__stdscr.getch()
+        if   k == ord('j'): self.__cursor_down(nfq)
+        elif k == ord('k'): self.__cursor_up()
+        elif k == ord('g'): self.__cur_y = 0
+        elif k == ord('G'):
             dest_y = min(nfq.get_pktnum(), MyCurses.__max_y) - 1
             if dest_y >= 0: self.__cur_y = dest_y
-        elif k == 'a':
+        elif k == ord('a'):
             nfq.accept(MyCurses.__listtop + self.__cur_y)
             self.__correct_curline(nfq)
-        elif k == 'd':
+        elif k == ord('d'):
             nfq.drop(MyCurses.__listtop + self.__cur_y)
             self.__correct_curline(nfq)
-        elif k == 'Q':
+        elif k == ord('e'):
+            i = MyCurses.__listtop + self.__cur_y
+            curses.curs_set(1)
+            nfq.set_payload( i,
+                curses_pad.CursesPad(
+                    self.__stdscr, nfq.get_payload(i)
+                    ).edit())
+            curses.curs_set(0)
+        elif k == ord('v'):
+            i = MyCurses.__listtop + self.__cur_y
+            curses.curs_set(1)
+            curses_pad.CursesPad(
+                self.__stdscr, nfq.get_rawpkt(i)
+                ).edit()
+            curses.curs_set(0)
+        elif k == ord('Q'):
             return -1
         self.printlist(nfq)
-    # def keyinput(self, nfq):
-    #     k = MyCurses.__stdscr.getch()
-    #     if   k == ord('j') or k == curses.KEY_DOWN: self.__cursor_down(nfq)
-    #     elif k == ord('k') or k == curses.KEY_UP: self.__cursor_up()
-    #     elif k == ord('g'): self.__cur_y = 0
-    #     elif k == ord('G'):
-    #         self.__cur_y = min(nfq.get_pktnum(), MyCurses.max_y) - 1
-    #     elif k == ord('Q'):
-    #         return -1
 
     def __correct_curline(self, nfq):
         pktnum = nfq.get_pktnum()

@@ -48,19 +48,20 @@ def main():
     nfq.set_socket_timeout(1)
     nfqthr = NfqRunner(nfq)
     crs    = MyCrs()
-    crsthr = CursesRunner(crs, nfq)
+    # crsthr = CursesRunner(crs, nfq)
     nfqthr.start()
-    crsthr.start()
+    # crsthr.start()
 
     while True:
         if crs.keyinput(nfq) is -1 : break
+        # crs.printlist(nfq)
 
     nfqthr.stop()
-    crsthr.stop()
+    # crsthr.stop()
     MyCrs.exit()
     print('wait for sub thread finish')
     nfqthr.join()
-    crsthr.join()
+    # crsthr.join()
     nfq.unbind()
     subprocess.call('iptables -t raw -F'.split(' '))
 
