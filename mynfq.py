@@ -67,9 +67,9 @@ class MyNfq:
 
     def accept(self, i):
         if self.get_pktnum() > 0:
-            # self.__pktlist[i]['pkt'].accept()
-            send(self.__pktlist[i]['dissectedpkt'], verbose=False)
-            self.__pktlist[i]['pkt'].drop()
+            self.__pktlist[i]['pkt'].accept()
+            #send(self.__pktlist[i]['dissectedpkt'], verbose=False)
+            #self.__pktlist[i]['pkt'].drop()
             self.__del_elem(i)
     def drop(self, i):
         if self.get_pktnum() > 0:
@@ -81,8 +81,6 @@ class MyNfq:
     def get_payload(self, i):
         return  self.__pktlist[i]['dissectedpkt'][TCP].payload.load.decode()
     def set_payload(self, i, raw):
-        # pkt = self.__pktlist[i]['dissectedpkt']
-        # self.__pktlist[i]['pkt'].set_payload(str(pkt).encode())
         if raw[-1] != '\n': raw += '\n'
         bodylen = len(raw.split('\r\n\r\n', 1)[1])
         raw = re.sub(r'(Content-Length: )[1-9]+', 'Content-Length: '+str(bodylen), raw)
@@ -90,6 +88,7 @@ class MyNfq:
         del self.__pktlist[i]['dissectedpkt'][IP].chksum
         del self.__pktlist[i]['dissectedpkt'][TCP].chksum
         self.__pktlist[i]['dissectedpkt'][TCP].payload.load = raw.encode()
+        self.__pktlist[i]['pkt'].set_payload(bytes(self.__pktlist[i]['dissectedpkt']))
     def get_rawpkt(self, i):
         # return  str(self.__pktlist[i]['dissected'])
         return  '{0}'.format(self.__pktlist[i]['dissectedpkt'])
