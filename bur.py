@@ -42,7 +42,7 @@ def main():
         +str(QUEUE_ID)+' -i '+IF).split(' '))
     subprocess.call((
         'iptables -t raw -A OUTPUT -j NFQUEUE --queue-num '
-        +str(QUEUE_ID)+' -s 192.168.67.10').split(' '))
+        +str(QUEUE_ID)+' -o '+IF).split(' '))
 
     nfq    = MyNfq(QUEUE_ID)
     nfq.set_socket_timeout(1)
