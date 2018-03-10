@@ -48,9 +48,9 @@ class MyNfq:
 
     @staticmethod
     def __is_HTTP(raw):
-        if re.match('^.+ /.* HTTP/.\..\r\n', raw.decode()):
+        if re.match(b'^.+ /.* HTTP/.\..\r\n', raw):
             return 'request'
-        elif re.match('^HTTP/.\.. .+ .+\r\n', raw.decode()):
+        elif re.match(b'^HTTP/.\.. .+ .+\r\n', raw):
             return 'response'
         else: return False
 
