@@ -1,3 +1,6 @@
+from opt import optparser
+args = optparser()
+
 import os
 import sys
 import subprocess
@@ -6,7 +9,6 @@ from mynfq import MyNfq
 from mycurses import MyCurses as MyCrs
 # from IPython import embed
 import time
-from opt import optparser
 
 class NfqRunner(threading.Thread):
     def __init__(self, nfq):
@@ -36,7 +38,6 @@ class CursesRunner(threading.Thread):
         self.__loop_flag = False
 
 def main():
-    args = optparser()
     QUEUE_ID   = 6
     interface  = args['<interface>']
     subprocess.call((
