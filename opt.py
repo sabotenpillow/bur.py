@@ -19,13 +19,7 @@ Options:
 from docopt import docopt
 
 def optparser():
-    args = docopt(__doc__, help=False)
-    if args['--help']:
-        print(__doc__)
-        exit(0)
-    if args['--version']:
-        print('v0.1')
-        exit(0)
+    args = docopt(__doc__, version='v0.1')
     return args
 
 if __name__ == '__main__':
