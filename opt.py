@@ -18,8 +18,10 @@ Options:
 
 from docopt import docopt
 
+VERSION = ''.join(open('version').readline().splitlines())
+
 def optparser():
-    args = docopt(__doc__, version='v0.1')
+    args = docopt(__doc__, version=VERSION)
     return args
 
 if __name__ == '__main__':
