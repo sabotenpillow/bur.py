@@ -5,12 +5,15 @@ from scapy.all import *
 # import socket
 
 class MyNfq:
-    def __init__(self, queue_id):
+    def __init__(self, queue_id, args):
         self.__nfqueue = NetfilterQueue()
         self.__nfqueue.bind(queue_id, self.__cb)
         self.__pktlist  = []
-        self.__only_req = False
-        self.__only_res = False
+        self.__only_req = args['--req']
+        self.__only_res = args['--res']
+        self.__host     = args['--host']
+        self.__dst      = args['--dst']
+        self.__src      = args['--src']
         self.__socket   = socket.fromfd(self.__nfqueue.get_fd(),
                                         socket.AF_UNIX,
                                         socket.SOCK_STREAM)
@@ -18,6 +21,12 @@ class MyNfq:
     def __cb(self, pkt):
         packet = IP(pkt.get_payload())
         if packet.proto is 0x06 and packet.haslayer(Raw):
+            if self.__host and not (packet.src in self.__host or packet.dst in self.__host):
+                pkt.accept(); return
+            if self.__src and not packet.src in self.__src:
+                pkt.accept(); return
+            if self.__dst and not packet.dst in self.__dst:
+                pkt.accept(); return
             is_http = MyNfq.__is_HTTP(packet[TCP].payload.load)
             if is_http == 'request':
                 if ( self.__only_res ):

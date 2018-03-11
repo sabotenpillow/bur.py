@@ -6,6 +6,7 @@ from mynfq import MyNfq
 from mycurses import MyCurses as MyCrs
 # from IPython import embed
 import time
+from opt import optparser
 
 class NfqRunner(threading.Thread):
     def __init__(self, nfq):
@@ -35,16 +36,17 @@ class CursesRunner(threading.Thread):
         self.__loop_flag = False
 
 def main():
-    QUEUE_ID = 6
-    IF       = 'eth1'
+    args = optparser()
+    QUEUE_ID   = 6
+    interface  = args['<interface>']
     subprocess.call((
         'iptables -t raw -A PREROUTING -j NFQUEUE --queue-num '
-        +str(QUEUE_ID)+' -i '+IF).split(' '))
+        +str(QUEUE_ID)+' -i '+interface).split(' '))
     subprocess.call((
         'iptables -t raw -A OUTPUT -j NFQUEUE --queue-num '
-        +str(QUEUE_ID)+' -o '+IF).split(' '))
+        +str(QUEUE_ID)+' -o '+interface).split(' '))
 
-    nfq    = MyNfq(QUEUE_ID)
+    nfq    = MyNfq(QUEUE_ID, args)
     nfq.set_socket_timeout(1)
     nfqthr = NfqRunner(nfq)
     crs    = MyCrs()
