@@ -1,3 +1,4 @@
+import sys
 __doc__ = """
 
 Usage:
@@ -14,7 +15,7 @@ Options:
     -h --host <host>   Specify source or destination address
     -v --version       Show version
     --help             Show help
-""".format(f=__file__).strip()
+""".format(f=sys.argv[0]).strip()
 
 from docopt import docopt
 
