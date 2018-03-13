@@ -18,12 +18,19 @@ Options:
 """.format(f=sys.argv[0]).strip()
 
 from docopt import docopt
+import os
 
 VERSION = ''.join(open('version').readline().splitlines())
 
 def optparser():
     args = docopt(__doc__, version=VERSION)
+    if not is_valid_ifname(args['<interface>']):
+        print('invalid interface name')
+        exit(-1)
     return args
+
+def is_valid_ifname(ifname):
+    return ifname in os.listdir('/sys/class/net')
 
 if __name__ == '__main__':
     print(optparser())
